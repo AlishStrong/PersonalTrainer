@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
 import './App.css';
 
+//Importing react-router
+import {BrowserRouter, Route, Switch, Link} from 'react-router-dom';
+import Calendar from './components/Calendar';
+
 //Importing react-table
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
-//View info about customer
-import CustomerInfo from './components/CustomerInfo'
+//Importing confirmation alert
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+//Links to other js files
+import CustomerInfo from './components/CustomerInfo';
+import AddCustomer from "./components/AddCustomer";
+import AddTraining from './components/AddTraining';
 
 class App extends Component {
 
@@ -24,30 +34,78 @@ class App extends Component {
     })
     }
 
+    // Add a new customer
+    addCustomer = (newCustomer) => {
+        fetch('https://customerrest.herokuapp.com/api/customers',
+            {method: 'POST',
+                headers : {'Content-Type': 'application/json'},
+                body: JSON.stringify(newCustomer)
+            })
+            .then(res => {
+                this.loadCustomers()
+
+            })
+    }
+
+    //Add training
+    addTraining = (newTraining) => {
+        fetch('https://customerrest.herokuapp.com/api/trainings',
+            {method: 'POST',
+                headers : {'Content-Type': 'application/json'},
+                body: JSON.stringify(newTraining)
+            })
+            .then(res => {
+                alert('Training added')
+                this.loadCustomers()
+            })
+    }
+
+    //delete customer
+    deleteCustomer = (value) => {
+        console.log(value)
+        confirmAlert({
+            title: 'Confirm to submit',
+            message: 'Are you sure to do this.',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => {
+                        fetch(value, {method: 'DELETE'})
+                            .then(res => {
+                                    this.loadCustomers()
+                                    alert('Customer deleted')
+                                }
+                            )
+                    }
+                },
+                {
+                    label: 'No'
+                }
+            ]
+        })
+    }
+
     componentDidMount() {
         this.loadCustomers();
 }
 
   render() {
-/*
-        const rows = this.state.customers.map(value =>
-            <tr>
-            <td>value.firstname</td>
-            <td>value.lastname</td>
-            <td>value.streetaddress</td>
-            <td>value.postcode</td>
-            <td>value.city</td>
-            <td>value.email</td>
-            <td>value.phone</td>
-            <td>value.links[1].href</td>
-            </tr>)
-*/
 
     return (
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Fitness Paradise</h1>
         </header>
+
+      <BrowserRouter>
+        <div>
+            <Link to="/calendar">Calendar</Link>{' '}
+            <Switch>
+                <Route path="/cars" component={Calendar}/>
+            </Switch>
+        </div>
+      </BrowserRouter>
+      <AddCustomer addCustomer={this.addCustomer} />
     <ReactTable
     data={this.state.customers}
     columns={[
@@ -61,46 +119,29 @@ class App extends Component {
                         Header: "Last name",
                         accessor: "lastname"
                     },
-/*
-                    {
-                        id: "linkCust",
-                        Header: "Link",
-                        //accessor: data => data.links[1].href
-                        accessor: "links[1].href",
-                        show: false
-
-                    },
-*/
                     {
                         id: 'button',
-                        accessor: "_links.self.href",
                         filterable: false,
                         sortable: false,
                         width: 100,
                         Cell: ({row}) => (<CustomerInfo customer={row} />)
+                    },
+
+                    {
+                        id: 'buttonT',
+                        filterable: false,
+                        sortable: false,
+                        width: 100,
+                        Cell: ({row}) => (<AddTraining addTraining={this.addTraining} customer={row}/>)
+                    },
+
+                    {
+                        Header: "",
+                        accessor: "links[0].href",
+                        filterable: false,
+                        sortable: false,
+                        Cell: ({value}) => (<button className="btn btn-primary" onClick={() => {this.deleteCustomer(value)}}>Delete customer</button>)
                     }
-                    /*
-                    {
-                        Header: "Address",
-                        accessor: "streetaddress"
-                    },
-                    {
-                        Header: "Postcode",
-                        accessor: "postcode"
-                    },
-                    {
-                        Header: "City",
-                        accessor: "city"
-                    },
-                    {
-                        Header: "Email address",
-                        accessor: "email"
-                    },
-                    {
-                        Header: "Phone number",
-                        accessor: "phone"
-                    }
-                    */
                          ]
             }
             ]}

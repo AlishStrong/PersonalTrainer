@@ -6,10 +6,7 @@ class CustomerInfo extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            //name: this.props.customer.firstname,
-            //surname: this.props.customer.lastname,
-            //link: this.props.customer.linkCust,
-            //custList: [this.props.customer]
+            trainings: [],
             name: this.props.customer._original.firstname,
             surname: this.props.customer._original.lastname,
             trainingLink: this.props.customer._original.links[2].href,
@@ -21,24 +18,41 @@ class CustomerInfo extends Component {
         }
 
     }
-/*
-    //retreive info about the customer
-    loadCust = () => {
-        fetch('https://customerrest.herokuapp.com/api/customers')
+
+    //fetch trainings
+    loadTrainings = () => {
+        fetch(this.state.trainingLink)
             .then(res => res.json())
             .then(resData => {
-                this.setState({custList: resData.content});
+                this.setState({trainings: resData.content});
             })
-            .then(this.setState({custList: this.state.custList[0]}))
-    }
-*/
-    componentDidMount() {
-        //this.loadCust();
-        console.log(this.props);
     }
 
+    //delete training
+    deleteTraining = (value) => {
+                        fetch(value, {method: 'DELETE'})
+                            .then(res => {
+                                    this.loadTrainings()
+                                    alert('Training deleted')
+                                         }
+                            )
+                                }
+
+    componentDidMount() {
+        this.loadTrainings();
+        //console.log(this.props);
+    }
 
     render() {
+        const trainingRow = this.state.trainings.map(
+            (exercise) =>
+            <tr key={exercise.id}>
+            <td>{exercise.activity}</td>
+            <td>{exercise.date}</td>
+            <td>{exercise.duration}</td>
+            <td><button className="btn btn-primary" onClick={() => this.deleteTraining(exercise.links[0].href)}>Delete</button></td>
+        </tr>
+    )
         return (
             <div>
                 <SkyLight hideOnOverlayClicked ref={ref => this.simpleDialog = ref} title="Customer info">
@@ -50,6 +64,9 @@ class CustomerInfo extends Component {
                     <p>{this.state.phone}</p>
                     <p>{this.state.postcode}</p>
                     <p>{this.state.streetaddress}</p>
+        <table>
+        {trainingRow}
+        </table>
                 </SkyLight>
                 <button className="btn btn-primary" onClick={() => this.simpleDialog.show()}>View info</button>
             </div>
