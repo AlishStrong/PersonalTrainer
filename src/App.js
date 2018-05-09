@@ -105,6 +105,7 @@ class App extends Component {
             </Switch>
         </div>
       </BrowserRouter>
+      <Calendar />
       <AddCustomer addCustomer={this.addCustomer} />
     <ReactTable
     data={this.state.customers}

@@ -62,7 +62,7 @@ class AddCustomer extends Component {
                 </SkyLight>
                 <button className="btn btn-primary" onClick={() => this.simpleDialog.show()}>Add customer</button>
             </div>
-        )
+    )
     }
 }
 

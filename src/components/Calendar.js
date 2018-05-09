@@ -1,109 +1,132 @@
 import React, {Component} from 'react';
-//import ReactEventsCalendar from 'react-events-calendar';
-//import moment from 'moment';
+import BigCalendar from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import SkyLight from 'react-skylight';
+import moment from 'moment';
 
 class Calendar extends Component {
-/*
+
     constructor(props) {
         super(props);
 
         this.state = {
             events: [
                 {
-                    id: 1,
-                    startDate: moment(new Date(2016, 8, 14, 10, 0)),
-                    endDate: moment(new Date(2016, 8, 14, 14, 0))
+                    id: 0,
+                    title: 'All Day Event very long title',
+                    allDay: true,
+                    start: new Date(2015, 3, 0),
+                    end: new Date(2015, 3, 1),
                 },
+                {
+                    id: 1,
+                    title: 'Long Event',
+                    start: new Date(2015, 3, 7),
+                    end: new Date(2015, 3, 10),
+                },
+
                 {
                     id: 2,
-                    startDate: moment(new Date(2016, 8, 16, 16, 0)),
-                    endDate: moment(new Date(2016, 8, 16, 18, 0))
+                    title: 'DTS STARTS',
+                    start: new Date(2016, 2, 13, 0, 0, 0),
+                    end: new Date(2016, 2, 20, 0, 0, 0),
                 },
+
                 {
                     id: 3,
-                    startDate: moment(new Date(2016, 8, 16, 20, 0)),
-                    endDate: moment(new Date(2016, 8, 16, 21, 0))
-                }
-            ],
-            newEvent: false,
-            selectedDateEvents: null
+                    title: 'DTS ENDS',
+                    start: new Date(2016, 10, 6, 0, 0, 0),
+                    end: new Date(2016, 10, 13, 0, 0, 0),
+                },
+
+                {
+                    id: 4,
+                    title: 'Some Event',
+                    start: new Date(2015, 3, 9, 0, 0, 0),
+                    end: new Date(2015, 3, 9, 0, 0, 0),
+                },
+                {
+                    id: 5,
+                    title: 'Conference',
+                    start: new Date(2015, 3, 11),
+                    end: new Date(2015, 3, 13),
+                    desc: 'Big conference for important people',
+                },
+                {
+                    id: 6,
+                    title: 'Meeting',
+                    start: new Date(2015, 3, 12, 10, 30, 0, 0),
+                    end: new Date(2015, 3, 12, 12, 30, 0, 0),
+                    desc: 'Pre-meeting meeting, to prepare for the meeting',
+                },
+                {
+                    id: 7,
+                    title: 'Lunch',
+                    start: new Date(2015, 3, 12, 12, 0, 0, 0),
+                    end: new Date(2015, 3, 12, 13, 0, 0, 0),
+                    desc: 'Power lunch',
+                },
+                {
+                    id: 8,
+                    title: 'Meeting',
+                    start: new Date(2015, 3, 12, 14, 0, 0, 0),
+                    end: new Date(2015, 3, 12, 15, 0, 0, 0),
+                },
+                {
+                    id: 9,
+                    title: 'Happy Hour',
+                    start: new Date(2015, 3, 12, 17, 0, 0, 0),
+                    end: new Date(2015, 3, 12, 17, 30, 0, 0),
+                    desc: 'Most important meal of the day',
+                },
+                {
+                    id: 10,
+                    title: 'Dinner',
+                    start: new Date(2015, 3, 12, 20, 0, 0, 0),
+                    end: new Date(2015, 3, 12, 21, 0, 0, 0),
+                },
+                {
+                    id: 11,
+                    title: 'Birthday Party',
+                    start: new Date(2015, 3, 13, 7, 0, 0),
+                    end: new Date(2015, 3, 13, 10, 30, 0),
+                },
+                {
+                    id: 12,
+                    title: 'Late Night Event',
+                    start: new Date(2015, 3, 17, 19, 30, 0),
+                    end: new Date(2015, 3, 18, 2, 0, 0),
+                },
+                {
+                    id: 13,
+                    title: 'Multi-day Event',
+                    start: new Date(2015, 3, 20, 19, 30, 0),
+                    end: new Date(2015, 3, 22, 2, 0, 0),
+                },
+                {
+                    id: 14,
+                    title: 'Today',
+                    start: new Date(new Date().setHours(new Date().getHours() - 3)),
+                    end: new Date(new Date().setHours(new Date().getHours() + 3)),
+                },
+            ]
         }
     }
 
-    handleSelectedDate = (date) => {
-        this.setState({
-            selectedDateEvents: this.refs.calendar.getEvents(date)
-        });
-    };
-
-    handleMonthChange = (month) => {
-        // TODO: Month changed
-    };
-
-    renderEvents = () => {
-        const events = [];
-        for (let event of this.state.selectedDateEvents) {
-            events.push(
-            <div className="list__item"
-            key={event.id}
-        >
-        <div className="row">
-                <div className="row__column">
-                <small>From</small>
-                </div>
-                <div className="row__column">
-                <small>To</small>
-                </div>
-                </div>
-                <div className="row">
-                <div className="row__column">
-                {event.startDate.format('HH:mm')}
-        </div>
-            <div className="row__column">
-                {event.endDate.format('HH:mm')}
-        </div>
-            </div>
-            </div>
-        );
-        }
-
-        if (events.length === 0) {
-            return (
-                <h2>No events to display</h2>
-        )
-        }
-        return (
-            <div>
-            <h1>Events</h1>
-            <div className="list">
-            {events}
-            </div>
-            </div>
-    );
-    };
-*/
     render() {
-        /*
-                let events = null;
-        if (this.state.selectedDateEvents) {
-            events = this.renderEvents();
-        }
-         */
+        let allViews = Object.keys(BigCalendar.Views).map(k => BigCalendar.Views[k])
         return (
-            <div>
-            <h2>Some text</h2>
+            <div><SkyLight hideOnOverlayClicked ref={ref => this.simpleDialog = ref} title="Customer info">
+            <BigCalendar
+        style={{ height: "100vh" }}
+        culture='en-GB'
+        events={this.state.events}
+        views={allViews}
+        step={30}
+        defaultDate={new Date()}
+        /></SkyLight>
+        <button className="btn btn-primary" onClick={() => this.simpleDialog.show()}>Calendar</button>
         </div>
-        /*
-        <div>
-                <ReactEventsCalendar ref="calendar"
-                                     events={this.state.events}
-                                     onDateSelect={this.handleSelectedDate}
-                                     onMonthChange={this.handleMonthChange}
-                />
-
-                {events}
-            </div>
-         */
     );
     }
 }
