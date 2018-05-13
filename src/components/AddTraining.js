@@ -5,7 +5,11 @@ class AddTraining extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {activity: '', duration: '', date: '', customer: this.props.customer._original.links[1].href};
+        this.state = {activity: '',
+            duration: '',
+            date: '',
+            time: '',
+            customer: this.props.customer._original.links[1].href};
     }
 
     //Change of data in input
@@ -21,7 +25,7 @@ class AddTraining extends Component {
         const newTraining = {
             activity: this.state.activity,
             duration: this.state.duration,
-            date: this.state.date,
+            date: this.state.date+'T'+this.state.time+':00.000+0000',
             customer: this.state.customer
         };
         this.props.addTraining(newTraining);
@@ -34,13 +38,19 @@ class AddTraining extends Component {
             <div>
                 <SkyLight hideOnOverlayClicked ref={ref => this.simpleDialog = ref} title="Add a new training">
                     <div className="form-group">
+                        <label for="activity" className="control-label">Activity name</label>
                         <input placeholder="Activity" className="form-control" name="activity" onChange={this.handleChange}/>
                     </div>
-                    <div className="form-group">
-                        <input placeholder="Duration" className="form-control" name="duration" onChange={this.handleChange}/>
-                    </div>
-                    <div className="form-group">
-                        <input placeholder="Date" className="form-control" name="date" onChange={this.handleChange}/>
+                    <div className="form-inline">
+                        <div className="form-group">
+                            <input placeholder="Date" className="form-control" name="date" type="text" placeholder="YYYY-MM-DD" onChange={this.handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <input placeholder="Time" className="form-control" name="time" type="text" placeholder="hh:mm" onChange={this.handleChange}/>
+                        </div>
+                        <div className="form-group">
+                            <input placeholder="Duration" className="form-control" name="duration" type="text" placeholder="Duration in minutes" onChange={this.handleChange}/>
+                        </div>
                     </div>
                     <button className="btn btn-primary" onClick={this.handleSubmit}>Save</button>
                 </SkyLight>
